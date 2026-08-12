@@ -8,6 +8,8 @@ import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Schemes from "./pages/Schemes";
+import SchemeDetails from "./pages/SchemeDetails";
 
 function App() {
   return (
@@ -35,6 +37,22 @@ function App() {
           element={
             <ProtectedRoute>
               <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/schemes"
+          element={
+            <ProtectedRoute>
+              <Schemes />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/schemes/:id"
+          element={
+            <ProtectedRoute>
+              <SchemeDetails />
             </ProtectedRoute>
           }
         />

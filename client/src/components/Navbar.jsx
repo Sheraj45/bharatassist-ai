@@ -23,6 +23,8 @@ function Navbar() {
           </>
         ) : (
           <>
+            <Link to="/schemes">Schemes</Link>
+            {" | "}
             <Link to="/dashboard">Dashboard</Link>
             {" | "}
             <Link to="/profile">Profile</Link>

@@ -6,6 +6,8 @@ const cors = require("cors");
 const connectDB = require("./config/db");
 const userRoutes = require("./routes/userRoutes");
 
+const schemeRoutes = require("./routes/schemeRoutes");
+
 const app = express();
 
 connectDB();
@@ -14,6 +16,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/users", userRoutes);
+app.use("/api/schemes", schemeRoutes);
 
 app.get("/api", (req, res) => {
   res.json({

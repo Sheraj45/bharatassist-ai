@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import API from "../api/api";
 
 function SchemeDetails() {
   const { id } = useParams();
+  const { t } = useTranslation();
 
   const [scheme, setScheme] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -16,17 +18,17 @@ function SchemeDetails() {
 
         setScheme(response.data.scheme);
       } catch (error) {
-        setMessage(error.response?.data?.message || "Failed to load scheme");
+        setMessage(error.response?.data?.message || t("failedToLoadScheme"));
       } finally {
         setLoading(false);
       }
     };
 
     getScheme();
-  }, [id]);
+  }, [id, t]);
 
   if (loading) {
-    return <p>Loading scheme...</p>;
+    return <p>{t("loadingScheme")}</p>;
   }
 
   if (message) {
@@ -35,25 +37,25 @@ function SchemeDetails() {
 
   return (
     <div>
-      <Link to="/schemes">← Back to Schemes</Link>
+      <Link to="/schemes">← {t("backToSchemes")}</Link>
 
       <h1>{scheme.name}</h1>
 
       <p>{scheme.description}</p>
 
-      <h3>Category</h3>
+      <h3>{t("category")}</h3>
       <p>{scheme.category}</p>
 
-      <h3>Eligibility</h3>
+      <h3>{t("eligibility")}</h3>
       <p>{scheme.eligibility}</p>
 
-      <h3>Benefits</h3>
+      <h3>{t("benefits")}</h3>
       <p>{scheme.benefits}</p>
 
-      <h3>Application Process</h3>
+      <h3>{t("applicationProcess")}</h3>
       <p>{scheme.applicationProcess}</p>
 
-      <h3>State</h3>
+      <h3>{t("state")}</h3>
       <p>{scheme.state}</p>
 
       <a
@@ -61,7 +63,7 @@ function SchemeDetails() {
         target="_blank"
         rel="noopener noreferrer"
       >
-        Visit Official Website
+        <button>{t("applyOfficial")} 🌐</button>
       </a>
     </div>
   );

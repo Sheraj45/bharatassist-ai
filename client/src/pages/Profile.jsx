@@ -1,52 +1,49 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import API from "../api/api";
 
 function Profile() {
+  const { t } = useTranslation();
+
   const [user, setUser] = useState(null);
   const [message, setMessage] = useState("");
 
   useEffect(() => {
     const getProfile = async () => {
       try {
-        const token = localStorage.getItem("token");
-
-        const response = await API.get("/users/profile", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await API.get("/users/profile");
 
         setUser(response.data.user);
       } catch (error) {
-        setMessage(error.response?.data?.message || "Failed to load profile");
+        setMessage(error.response?.data?.message || t("failedToLoadProfile"));
       }
     };
 
     getProfile();
-  }, []);
+  }, [t]);
 
   if (message) {
     return <p>{message}</p>;
   }
 
   if (!user) {
-    return <p>Loading profile...</p>;
+    return <p>{t("loadingProfile")}</p>;
   }
 
   return (
     <div>
-      <h1>My Profile</h1>
+      <h1>{t("myProfile")}</h1>
 
       <p>
-        <strong>Name:</strong> {user.name}
+        <strong>{t("name")}:</strong> {user.name}
       </p>
 
       <p>
-        <strong>Email:</strong> {user.email}
+        <strong>{t("email")}:</strong> {user.email}
       </p>
 
       <p>
-        <strong>Role:</strong> {user.role}
+        <strong>{t("role")}:</strong> {user.role}
       </p>
     </div>
   );

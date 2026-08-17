@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
-import API from "../api/api";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import API from "../api/api";
 
 function Schemes() {
+  const { t } = useTranslation();
+
   const [schemes, setSchemes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
@@ -16,22 +19,23 @@ function Schemes() {
 
         setSchemes(response.data.schemes);
       } catch (error) {
-        setMessage(error.response?.data?.message || "Failed to load schemes");
+        setMessage(error.response?.data?.message || t("failedToLoadSchemes"));
       } finally {
         setLoading(false);
       }
     };
 
     getSchemes();
-  }, []);
+  }, [t]);
 
   if (loading) {
-    return <p>Loading schemes...</p>;
+    return <p>{t("loadingSchemes")}</p>;
   }
 
   if (message) {
     return <p>{message}</p>;
   }
+
   const filteredSchemes = schemes.filter((scheme) => {
     const matchesSearch =
       scheme.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -41,26 +45,29 @@ function Schemes() {
 
     return matchesSearch && matchesCategory;
   });
+
   return (
     <div>
-      <h1>Government Schemes</h1>
+      <h1>{t("governmentSchemes")}</h1>
+
       <input
         type="text"
-        placeholder="Search government schemes..."
+        placeholder={t("searchSchemes")}
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
+
       <select value={category} onChange={(e) => setCategory(e.target.value)}>
-        <option value="all">All Categories</option>
-        <option value="student">Students</option>
-        <option value="farmer">Farmers</option>
-        <option value="job_seeker">Job Seekers</option>
-        <option value="senior_citizen">Senior Citizens</option>
-        <option value="general">General</option>
+        <option value="all">{t("allCategories")}</option>
+        <option value="student">{t("students")}</option>
+        <option value="farmer">{t("farmers")}</option>
+        <option value="job_seeker">{t("jobSeekers")}</option>
+        <option value="senior_citizen">{t("seniorCitizens")}</option>
+        <option value="general">{t("general")}</option>
       </select>
 
       {filteredSchemes.length === 0 ? (
-        <p>No schemes available.</p>
+        <p>{t("noSchemes")}</p>
       ) : (
         filteredSchemes.map((scheme) => (
           <div key={scheme._id}>
@@ -69,21 +76,22 @@ function Schemes() {
             <p>{scheme.description}</p>
 
             <p>
-              <strong>Category:</strong> {scheme.category}
+              <strong>{t("category")}:</strong> {scheme.category}
             </p>
 
             <p>
-              <strong>Eligibility:</strong> {scheme.eligibility}
+              <strong>{t("eligibility")}:</strong> {scheme.eligibility}
             </p>
 
             <p>
-              <strong>Benefits:</strong> {scheme.benefits}
+              <strong>{t("benefits")}:</strong> {scheme.benefits}
             </p>
 
             <p>
-              <strong>State:</strong> {scheme.state}
+              <strong>{t("state")}:</strong> {scheme.state}
             </p>
-            <Link to={`/schemes/${scheme._id}`}>View Details</Link>
+
+            <Link to={`/schemes/${scheme._id}`}>{t("viewDetails")}</Link>
           </div>
         ))
       )}

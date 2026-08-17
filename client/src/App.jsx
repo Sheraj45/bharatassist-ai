@@ -10,6 +10,8 @@ import Profile from "./pages/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Schemes from "./pages/Schemes";
 import SchemeDetails from "./pages/SchemeDetails";
+import Updates from "./pages/Updates";
+import UpdateDetails from "./pages/UpdateDetails";
 
 function App() {
   return (
@@ -56,6 +58,8 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/updates" element={<Updates />} />
+        <Route path="/updates/:id" element={<UpdateDetails />} />
       </Routes>
     </BrowserRouter>
   );

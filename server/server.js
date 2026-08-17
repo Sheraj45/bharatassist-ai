@@ -7,7 +7,7 @@ const connectDB = require("./config/db");
 const userRoutes = require("./routes/userRoutes");
 
 const schemeRoutes = require("./routes/schemeRoutes");
-
+const updateRoutes = require("./routes/updateRoutes");
 const app = express();
 
 connectDB();
@@ -17,7 +17,7 @@ app.use(express.json());
 
 app.use("/api/users", userRoutes);
 app.use("/api/schemes", schemeRoutes);
-
+app.use("/api/updates", updateRoutes);
 app.get("/api", (req, res) => {
   res.json({
     message: "Welcome to BharatAssist AI Backend",

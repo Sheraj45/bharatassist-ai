@@ -1,7 +1,10 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import i18n from "../i18n";
 
 function Navbar() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const token = localStorage.getItem("token");
 
@@ -17,19 +20,33 @@ function Navbar() {
       <div>
         {!token ? (
           <>
-            <Link to="/login">Login</Link>
+            <Link to="/login">{t("login")}</Link>
             {" | "}
-            <Link to="/signup">Sign Up</Link>
+            <Link to="/signup">{t("signup")}</Link>
           </>
         ) : (
           <>
-            <Link to="/schemes">Schemes</Link>
+            <Link to="/schemes">{t("schemes")}</Link>
             {" | "}
-            <Link to="/dashboard">Dashboard</Link>
+            <Link to="/dashboard">{t("dashboard")}</Link>
             {" | "}
-            <Link to="/profile">Profile</Link>
+            <Link to="/updates">{t("updates")}</Link>
             {" | "}
-            <button onClick={handleLogout}>Logout</button>
+            <Link to="/profile">{t("profile")}</Link>
+            {" | "}
+
+            <select
+              value={i18n.language}
+              onChange={(e) => i18n.changeLanguage(e.target.value)}
+            >
+              <option value="en">English</option>
+              <option value="hi">हिन्दी</option>
+              <option value="te">తెలుగు</option>
+            </select>
+
+            {" | "}
+
+            <button onClick={handleLogout}>{t("logout")}</button>
           </>
         )}
       </div>

@@ -2,9 +2,12 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
+// ===============================
+// SIGNUP USER
+// ===============================
 const signupUser = async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, category } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -24,6 +27,7 @@ const signupUser = async (req, res) => {
       email,
       password: hashedPassword,
       role,
+      category,
     });
 
     res.status(201).json({
@@ -33,6 +37,7 @@ const signupUser = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
+        category: user.category,
       },
     });
   } catch (error) {
@@ -42,6 +47,9 @@ const signupUser = async (req, res) => {
   }
 };
 
+// ===============================
+// LOGIN USER
+// ===============================
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -83,6 +91,7 @@ const loginUser = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
+        category: user.category,
       },
     });
   } catch (error) {
@@ -92,6 +101,9 @@ const loginUser = async (req, res) => {
   }
 };
 
+// ===============================
+// GET PROFILE
+// ===============================
 const getProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
@@ -112,9 +124,12 @@ const getProfile = async (req, res) => {
   }
 };
 
+// ===============================
+// UPDATE PROFILE
+// ===============================
 const updateProfile = async (req, res) => {
   try {
-    const { name, role } = req.body;
+    const { name, role, category } = req.body;
 
     const user = await User.findById(req.user.id);
 
@@ -124,12 +139,19 @@ const updateProfile = async (req, res) => {
       });
     }
 
+    // Update name
     if (name) {
       user.name = name;
     }
 
+    // Update role
     if (role) {
       user.role = role;
+    }
+
+    // Update category
+    if (category) {
+      user.category = category;
     }
 
     await user.save();
@@ -141,6 +163,7 @@ const updateProfile = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
+        category: user.category,
       },
     });
   } catch (error) {
@@ -150,6 +173,9 @@ const updateProfile = async (req, res) => {
   }
 };
 
+// ===============================
+// DELETE PROFILE
+// ===============================
 const deleteProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
@@ -172,6 +198,9 @@ const deleteProfile = async (req, res) => {
   }
 };
 
+// ===============================
+// EXPORT CONTROLLERS
+// ===============================
 module.exports = {
   signupUser,
   loginUser,

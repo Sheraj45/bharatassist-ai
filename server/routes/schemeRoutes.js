@@ -8,11 +8,16 @@ const {
   getSchemeById,
   updateScheme,
   deleteScheme,
+  getRecommendedSchemes,
 } = require("../controllers/schemeController");
+
+const protect = require("../middleware/authMiddleware");
 
 router.post("/", createScheme);
 
 router.get("/", getSchemes);
+
+router.get("/recommended", protect, getRecommendedSchemes);
 
 router.get("/:id", getSchemeById);
 

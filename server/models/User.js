@@ -26,6 +26,11 @@ const userSchema = new mongoose.Schema(
       enum: ["student", "farmer", "job_seeker", "senior_citizen"],
       required: true,
     },
+    category: {
+      type: String,
+      enum: ["student", "farmer", "job_seeker", "senior_citizen", "general"],
+      default: "general",
+    },
   },
   {
     timestamps: true,

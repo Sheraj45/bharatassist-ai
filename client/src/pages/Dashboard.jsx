@@ -1,6 +1,11 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import API from "../api/api";
 
 function Dashboard() {
+  const [recommendedSchemes, setRecommendedSchemes] = useState([]);
+  const [loadingRecommendations, setLoadingRecommendations] = useState(true);
+
   const categories = [
     {
       title: "Students",
@@ -28,15 +33,75 @@ function Dashboard() {
     },
   ];
 
+  // Fetch recommended schemes
+  useEffect(() => {
+    const fetchRecommendations = async () => {
+      try {
+        const response = await API.get("/schemes/recommended");
+
+        console.log("Recommendation response:", response.data);
+
+        setRecommendedSchemes(response.data.schemes || []);
+      } catch (error) {
+        console.error("RECOMMENDATION ERROR:", error);
+      } finally {
+        setLoadingRecommendations(false);
+      }
+    };
+
+    fetchRecommendations();
+  }, []);
+
   return (
     <div>
       <h1>Welcome to BharatAssist AI 👋</h1>
 
       <p>Your one-stop assistant for government information.</p>
+
       <p>
         Find government schemes, opportunities and important information in one
         place.
       </p>
+
+      <hr />
+
+      {/* Recommended Schemes */}
+      <h2>Recommended for You 🎯</h2>
+
+      {loadingRecommendations && <p>Loading recommendations...</p>}
+      {!loadingRecommendations && recommendedSchemes.length === 0 && (
+        <p>No recommended schemes available.</p>
+      )}
+      {!loadingRecommendations && recommendedSchemes.length > 0 && (
+        <div>
+          {recommendedSchemes.map((scheme) => (
+            <div key={scheme._id}>
+              <h3>{scheme.name}</h3>
+
+              <p>{scheme.description}</p>
+
+              <p>
+                <strong>Category:</strong> {scheme.category}
+              </p>
+
+              <p>
+                <strong>Eligibility:</strong> {scheme.eligibility}
+              </p>
+
+              <p>
+                <strong>Benefits:</strong> {scheme.benefits}
+              </p>
+
+              <Link to={`/schemes/${scheme._id}`}>View Details</Link>
+
+              <hr />
+            </div>
+          ))}
+        </div>
+      )}
+      <hr />
+
+      {/* CATEGORIES */}
 
       <h2>How can we help you?</h2>
 

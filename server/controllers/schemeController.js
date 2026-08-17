@@ -97,11 +97,39 @@ const deleteScheme = async (req, res) => {
     });
   }
 };
+const getRecommendedSchemes = async (req, res) => {
+  try {
+    const User = require("../models/User");
 
+    const user = await User.findById(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    const schemes = await Scheme.find({
+      category: {
+        $in: [user.category, "general"],
+      },
+    });
+
+    res.status(200).json({
+      category: user.category,
+      schemes,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
 module.exports = {
   createScheme,
   getSchemes,
   getSchemeById,
   updateScheme,
   deleteScheme,
+  getRecommendedSchemes,
 };

@@ -23,28 +23,73 @@ function Profile() {
   }, [t]);
 
   if (message) {
-    return <p>{message}</p>;
+    return (
+      <div className="page-container">
+        <div className="status-card error-card">
+          <p>{message}</p>
+        </div>
+      </div>
+    );
   }
 
   if (!user) {
-    return <p>{t("loadingProfile")}</p>;
+    return (
+      <div className="page-container">
+        <div className="status-card">
+          <p>{t("loadingProfile")}</p>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div>
-      <h1>{t("myProfile")}</h1>
+    <div className="page-container">
+      <section className="page-header">
+        <p className="section-label">BharatAssist AI</p>
 
-      <p>
-        <strong>{t("name")}:</strong> {user.name}
-      </p>
+        <h1>{t("myProfile")}</h1>
 
-      <p>
-        <strong>{t("email")}:</strong> {user.email}
-      </p>
+        <p>View your BharatAssist AI account information.</p>
+      </section>
 
-      <p>
-        <strong>{t("role")}:</strong> {user.role}
-      </p>
+      <div className="profile-card">
+        <div className="profile-avatar">
+          {user.name?.charAt(0).toUpperCase()}
+        </div>
+
+        <h2>{user.name}</h2>
+
+        <p className="profile-role">{user.role}</p>
+
+        <div className="profile-info">
+          <div className="profile-info-item">
+            <span>👤</span>
+
+            <div>
+              <strong>{t("name")}</strong>
+              <p>{user.name}</p>
+            </div>
+          </div>
+
+          <div className="profile-info-item">
+            <span>📧</span>
+
+            <div>
+              <strong>{t("email")}</strong>
+              <p>{user.email}</p>
+            </div>
+          </div>
+
+          <div className="profile-info-item">
+            <span>🔐</span>
+
+            <div>
+              <strong>{t("role")}</strong>
+              <p>{user.role}</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

@@ -1,64 +1,86 @@
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import API from "../api/api";
 
 function Login() {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  const { t } = useTranslation();
+  const navigate = useNavigate();
 
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await API.post("/users/login", formData);
+      setLoading(true);
+      setMessage("");
 
-      const token = response.data.token;
+      const response = await API.post("/users/login", {
+        email,
+        password,
+      });
 
-      localStorage.setItem("token", token);
+      localStorage.setItem("token", response.data.token);
 
-      setMessage("Login successful!");
-
-      console.log("JWT Token:", token);
+      navigate("/dashboard");
     } catch (error) {
       setMessage(error.response?.data?.message || "Login failed");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div>
-      <h1>Login</h1>
+    <div className="auth-page">
+      <div className="auth-card">
+        <div className="auth-header">
+          <span className="auth-icon">🇮🇳</span>
 
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-        />
+          <h1>{t("login")}</h1>
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-        />
+          <p>Welcome back to BharatAssist AI.</p>
+        </div>
 
-        <button type="submit">Login</button>
-      </form>
+        <form onSubmit={handleLogin}>
+          <label>{t("email")}</label>
 
-      {message && <p>{message}</p>}
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter your email"
+            required
+          />
+
+          <label>Password</label>
+
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Enter your password"
+            required
+          />
+
+          {message && <p className="auth-error">{message}</p>}
+
+          <button
+            type="submit"
+            className="primary-button auth-button"
+            disabled={loading}
+          >
+            {loading ? "Logging in..." : t("login")}
+          </button>
+        </form>
+
+        <p className="auth-footer">
+          Don't have an account? <Link to="/signup">{t("createAccount")}</Link>
+        </p>
+      </div>
     </div>
   );
 }

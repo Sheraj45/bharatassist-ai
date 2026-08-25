@@ -9,18 +9,20 @@ function UpdateDetails() {
 
   const [update, setUpdate] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     const fetchUpdate = async () => {
       try {
+        setMessage("");
+
         const response = await API.get(`/updates/${id}`);
 
         setUpdate(response.data.update);
       } catch (error) {
         console.error("Failed to load update:", error);
 
-        setError(error.response?.data?.message || t("failedToLoadUpdate"));
+        setMessage(error.response?.data?.message || t("failedToLoadUpdate"));
       } finally {
         setLoading(false);
       }
@@ -30,50 +32,97 @@ function UpdateDetails() {
   }, [id, t]);
 
   if (loading) {
-    return <p>{t("loadingUpdate")}</p>;
+    return (
+      <div className="page-container">
+        <div className="status-card">
+          <p>{t("loadingUpdate")}</p>
+        </div>
+      </div>
+    );
   }
 
-  if (error) {
-    return <p>{error}</p>;
+  if (message) {
+    return (
+      <div className="page-container">
+        <div className="status-card error-card">
+          <p>{message}</p>
+        </div>
+      </div>
+    );
   }
 
   if (!update) {
-    return <p>{t("updateNotFound")}</p>;
+    return (
+      <div className="page-container">
+        <div className="status-card">
+          <p>{t("updateNotFound")}</p>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div>
-      <h1>{update.title}</h1>
+    <div className="page-container">
+      {/* Back */}
+      <Link to="/updates" className="back-link">
+        ← {t("backToUpdates")}
+      </Link>
 
-      <p>{update.description}</p>
+      {/* Main Card */}
+      <article className="update-details-card">
+        {/* Header */}
+        <div className="update-details-header">
+          <div>
+            <span className="category-badge">{update.category}</span>
 
-      <p>
-        <strong>{t("category")}:</strong> {update.category}
-      </p>
+            <h1>{update.title}</h1>
+          </div>
 
-      <p>
-        <strong>{t("source")}:</strong> {update.source}
-      </p>
+          <span className="update-date">
+            {new Date(update.publishedDate).toLocaleDateString()}
+          </span>
+        </div>
 
-      <p>
-        <strong>{t("published")}:</strong>{" "}
-        {new Date(update.publishedDate).toLocaleDateString()}
-      </p>
+        <hr />
 
-      <br />
+        {/* Description */}
+        <div className="update-details-content">
+          <p>{update.description}</p>
+        </div>
 
-      <a
-        href={update.officialWebsite}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <button>{t("visitOfficialWebsite")} 🌐</button>
-      </a>
+        {/* Information */}
+        <div className="update-info-grid">
+          <div className="detail-box">
+            <h3>🏛️ {t("source")}</h3>
 
-      <br />
-      <br />
+            <p>{update.source}</p>
+          </div>
 
-      <Link to="/updates">← {t("backToUpdates")}</Link>
+          <div className="detail-box">
+            <h3>📅 {t("published")}</h3>
+
+            <p>{new Date(update.publishedDate).toLocaleDateString()}</p>
+          </div>
+        </div>
+
+        {/* Official Website */}
+        <div className="apply-section">
+          <div>
+            <h2>{t("visitOfficialWebsite")}</h2>
+
+            <p>Visit the official website for complete information.</p>
+          </div>
+
+          <a
+            href={update.officialWebsite}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="primary-button"
+          >
+            {t("visitOfficialWebsite")} 🌐
+          </a>
+        </div>
+      </article>
     </div>
   );
 }

@@ -8,17 +8,20 @@ function Updates() {
 
   const [updates, setUpdates] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     const fetchUpdates = async () => {
       try {
+        setMessage("");
+
         const response = await API.get("/updates");
+
         setUpdates(response.data.updates || []);
       } catch (error) {
         console.error("Failed to load updates:", error);
 
-        setError(error.response?.data?.message || t("failedToLoadUpdates"));
+        setMessage(error.response?.data?.message || t("failedToLoadUpdates"));
       } finally {
         setLoading(false);
       }
@@ -28,40 +31,69 @@ function Updates() {
   }, [t]);
 
   if (loading) {
-    return <p>{t("loadingUpdates")}</p>;
+    return (
+      <div className="page-container">
+        <div className="status-card">
+          <p>{t("loadingUpdates")}</p>
+        </div>
+      </div>
+    );
   }
 
-  if (error) {
-    return <p>{error}</p>;
+  if (message) {
+    return (
+      <div className="page-container">
+        <div className="status-card error-card">
+          <p>{message}</p>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div>
-      <h1>{t("governmentUpdates")} 📰</h1>
+    <div className="page-container">
+      {/* Header */}
+      <section className="page-header">
+        <p className="section-label">BharatAssist AI</p>
 
-      <p>{t("updatesDescription")}</p>
+        <h1>{t("governmentUpdates")} 📰</h1>
 
+        <p>{t("updatesDescription")}</p>
+      </section>
+
+      {/* Updates */}
       {updates.length === 0 ? (
-        <p>{t("noUpdates")}</p>
+        <div className="status-card">
+          <p>{t("noUpdates")}</p>
+        </div>
       ) : (
-        <div>
+        <div className="updates-grid">
           {updates.map((update) => (
-            <div key={update._id}>
+            <div className="update-card" key={update._id}>
+              {/* Card Header */}
+              <div className="update-card-header">
+                <span className="category-badge">{update.category}</span>
+
+                <span className="update-date">
+                  {new Date(update.publishedDate).toLocaleDateString()}
+                </span>
+              </div>
+
+              {/* Title */}
               <h2>{update.title}</h2>
 
-              <p>{update.description}</p>
+              {/* Description */}
+              <p className="update-description">{update.description}</p>
 
-              <p>
-                <strong>{t("category")}:</strong> {update.category}
-              </p>
-
-              <p>
+              {/* Source */}
+              <p className="update-source">
                 <strong>{t("source")}:</strong> {update.source}
               </p>
 
-              <Link to={`/updates/${update._id}`}>{t("readMore")}</Link>
-
-              <hr />
+              {/* Button */}
+              <Link to={`/updates/${update._id}`} className="primary-button">
+                {t("readMore")} →
+              </Link>
             </div>
           ))}
         </div>

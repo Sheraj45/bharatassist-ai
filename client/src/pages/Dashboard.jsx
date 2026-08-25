@@ -12,36 +12,33 @@ function Dashboard() {
 
   const categories = [
     {
-      key: "students",
+      key: "Students",
       icon: "🎓",
-      descriptionKey: "studentsDescription",
+      description: "studentDescription",
     },
     {
-      key: "farmers",
+      key: "Farmers",
       icon: "🌾",
-      descriptionKey: "farmersDescription",
+      description: "farmerDescription",
     },
     {
-      key: "jobSeekers",
+      key: "Job Seekers",
       icon: "💼",
-      descriptionKey: "jobSeekersDescription",
+      description: "jobSeekerDescription",
     },
     {
-      key: "seniorCitizens",
+      key: "Senior Citizens",
       icon: "👴",
-      descriptionKey: "seniorCitizensDescription",
+      description: "seniorCitizenDescription",
     },
   ];
 
-  // Fetch recommended schemes
   useEffect(() => {
     const fetchRecommendations = async () => {
       try {
         setRecommendationError("");
 
         const response = await API.get("/schemes/recommended");
-
-        console.log("Recommendation response:", response.data);
 
         setRecommendedSchemes(response.data.schemes || []);
       } catch (error) {
@@ -59,88 +56,136 @@ function Dashboard() {
   }, [t]);
 
   return (
-    <div>
-      {/* ==================== WELCOME ==================== */}
+    <div className="dashboard-container">
+      {/* Hero Section */}
+      <section className="dashboard-hero">
+        <div>
+          <p className="dashboard-label">BharatAssist AI</p>
 
-      <h1>{t("welcome")} 👋</h1>
+          <h1>{t("welcome")} 👋</h1>
 
-      <p>{t("dashboardSubtitle")}</p>
+          <p className="dashboard-subtitle">{t("dashboardDescription")}</p>
 
-      <p>{t("dashboardDescription")}</p>
+          <p className="dashboard-info">{t("dashboardInfo")}</p>
 
-      <hr />
+          <Link to="/schemes" className="primary-button">
+            {t("governmentSchemes")}
+          </Link>
+        </div>
+      </section>
 
-      {/* ==================== RECOMMENDATIONS ==================== */}
-
-      <h2>{t("recommended")} 🎯</h2>
-
-      {loadingRecommendations && <p>{t("loadingRecommendations")}</p>}
-
-      {!loadingRecommendations && recommendationError && (
-        <p>{recommendationError}</p>
-      )}
-
-      {!loadingRecommendations &&
-        !recommendationError &&
-        recommendedSchemes.length === 0 && <p>{t("noRecommendations")}</p>}
-
-      {!loadingRecommendations &&
-        !recommendationError &&
-        recommendedSchemes.length > 0 && (
+      {/* Recommendations */}
+      <section className="dashboard-section">
+        <div className="section-heading">
           <div>
-            {recommendedSchemes.map((scheme) => (
-              <div key={scheme._id}>
-                <h3>{scheme.name}</h3>
+            <p className="section-label">AI</p>
+            <h2>{t("recommended")} 🎯</h2>
+          </div>
+        </div>
 
-                <p>{scheme.description}</p>
-
-                <p>
-                  <strong>{t("category")}:</strong> {scheme.category}
-                </p>
-
-                <p>
-                  <strong>{t("eligibility")}:</strong> {scheme.eligibility}
-                </p>
-
-                <p>
-                  <strong>{t("benefits")}:</strong> {scheme.benefits}
-                </p>
-
-                <Link to={`/schemes/${scheme._id}`}>{t("viewDetails")}</Link>
-
-                <hr />
-              </div>
-            ))}
+        {loadingRecommendations && (
+          <div className="status-card">
+            <p>{t("loadingRecommendations")}</p>
           </div>
         )}
 
-      <hr />
-
-      {/* ==================== CATEGORIES ==================== */}
-
-      <h2>{t("howCanWeHelp")}</h2>
-
-      <div>
-        {categories.map((category) => (
-          <div key={category.key}>
-            <h3>
-              {category.icon} {t(category.key)}
-            </h3>
-
-            <p>{t(category.descriptionKey)}</p>
-
-            <button>{t("explore")}</button>
+        {!loadingRecommendations && recommendationError && (
+          <div className="status-card error-card">
+            <p>{recommendationError}</p>
           </div>
-        ))}
-      </div>
+        )}
 
-      <hr />
+        {!loadingRecommendations &&
+          !recommendationError &&
+          recommendedSchemes.length === 0 && (
+            <div className="status-card">
+              <p>{t("noRecommendations")}</p>
+            </div>
+          )}
 
-      {/* ==================== QUICK ACCESS ==================== */}
+        {!loadingRecommendations &&
+          !recommendationError &&
+          recommendedSchemes.length > 0 && (
+            <div className="recommendation-grid">
+              {recommendedSchemes.map((scheme) => (
+                <div
+                  className="scheme-card recommendation-card"
+                  key={scheme._id}
+                >
+                  <div className="scheme-card-top">
+                    <span className="category-badge">{scheme.category}</span>
+                  </div>
 
-      <h2>{t("quickAccess")}</h2>
+                  <h3>{scheme.name}</h3>
 
-      <Link to="/profile">{t("myProfile")}</Link>
+                  <p className="scheme-description">{scheme.description}</p>
+
+                  <div className="scheme-info">
+                    <p>
+                      <strong>{t("eligibility")}:</strong>
+                      <br />
+                      {scheme.eligibility}
+                    </p>
+
+                    <p>
+                      <strong>{t("benefits")}:</strong>
+                      <br />
+                      {scheme.benefits}
+                    </p>
+                  </div>
+
+                  <Link
+                    to={`/schemes/${scheme._id}`}
+                    className="secondary-button"
+                  >
+                    {t("viewDetails")} →
+                  </Link>
+                </div>
+              ))}
+            </div>
+          )}
+      </section>
+
+      {/* Categories */}
+      <section className="dashboard-section">
+        <div className="section-heading">
+          <div>
+            <p className="section-label">Explore</p>
+            <h2>{t("howCanWeHelp")}</h2>
+          </div>
+        </div>
+
+        <div className="category-grid">
+          {categories.map((category) => (
+            <div className="category-card" key={category.key}>
+              <div className="category-icon">{category.icon}</div>
+
+              <h3>{t(category.key)}</h3>
+
+              <p>{t(category.description)}</p>
+
+              <Link to="/schemes" className="category-button">
+                {t("explore")} →
+              </Link>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Quick Access */}
+      <section className="quick-access-section">
+        <div>
+          <p className="section-label">Quick Access</p>
+
+          <h2>{t("quickAccess")}</h2>
+
+          <p>Access your account information quickly.</p>
+        </div>
+
+        <Link to="/profile" className="primary-button">
+          {t("myProfile")} →
+        </Link>
+      </section>
     </div>
   );
 }

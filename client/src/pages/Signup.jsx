@@ -1,82 +1,96 @@
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import API from "../api/api";
 
 function Signup() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    role: "student",
-  });
+  const { t } = useTranslation();
+  const navigate = useNavigate();
 
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSubmit = async (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await API.post("/users/signup", formData);
+      setLoading(true);
+      setMessage("");
 
-      setMessage(response.data.message);
-
-      setFormData({
-        name: "",
-        email: "",
-        password: "",
-        role: "student",
+      await API.post("/users/signup", {
+        name,
+        email,
+        password,
       });
+
+      navigate("/login");
     } catch (error) {
       setMessage(error.response?.data?.message || "Signup failed");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div>
-      <h1>Create Account</h1>
+    <div className="auth-page">
+      <div className="auth-card">
+        <div className="auth-header">
+          <span className="auth-icon">🇮🇳</span>
 
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="name"
-          placeholder="Name"
-          value={formData.name}
-          onChange={handleChange}
-        />
+          <h1>{t("createAccount")}</h1>
 
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-        />
+          <p>Create your BharatAssist AI account.</p>
+        </div>
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-        />
+        <form onSubmit={handleSignup}>
+          <label>{t("name")}</label>
 
-        <select name="role" value={formData.role} onChange={handleChange}>
-          <option value="student">Student</option>
-          <option value="farmer">Farmer</option>
-          <option value="job_seeker">Job Seeker</option>
-          <option value="senior_citizen">Senior Citizen</option>
-        </select>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Enter your name"
+            required
+          />
 
-        <button type="submit">Sign Up</button>
-      </form>
+          <label>{t("email")}</label>
 
-      {message && <p>{message}</p>}
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter your email"
+            required
+          />
+
+          <label>Password</label>
+
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Create a password"
+            required
+          />
+
+          {message && <p className="auth-error">{message}</p>}
+
+          <button
+            type="submit"
+            className="primary-button auth-button"
+            disabled={loading}
+          >
+            {loading ? "Creating account..." : t("createAccount")}
+          </button>
+        </form>
+
+        <p className="auth-footer">
+          Already have an account? <Link to="/login">{t("login")}</Link>
+        </p>
+      </div>
     </div>
   );
 }

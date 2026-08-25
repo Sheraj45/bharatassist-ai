@@ -17,7 +17,7 @@ function Schemes() {
       try {
         const response = await API.get("/schemes");
 
-        setSchemes(response.data.schemes);
+        setSchemes(response.data.schemes || []);
       } catch (error) {
         setMessage(error.response?.data?.message || t("failedToLoadSchemes"));
       } finally {
@@ -28,72 +28,127 @@ function Schemes() {
     getSchemes();
   }, [t]);
 
-  if (loading) {
-    return <p>{t("loadingSchemes")}</p>;
-  }
-
-  if (message) {
-    return <p>{message}</p>;
-  }
-
   const filteredSchemes = schemes.filter((scheme) => {
+    const searchText = search.toLowerCase();
+
     const matchesSearch =
-      scheme.name.toLowerCase().includes(search.toLowerCase()) ||
-      scheme.description.toLowerCase().includes(search.toLowerCase());
+      scheme.name.toLowerCase().includes(searchText) ||
+      scheme.description.toLowerCase().includes(searchText);
 
     const matchesCategory = category === "all" || scheme.category === category;
 
     return matchesSearch && matchesCategory;
   });
 
+  if (loading) {
+    return (
+      <div className="page-container">
+        <div className="status-card">
+          <p>{t("loadingSchemes")}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (message) {
+    return (
+      <div className="page-container">
+        <div className="status-card error-card">
+          <p>{message}</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div>
-      <h1>{t("governmentSchemes")}</h1>
+    <div className="page-container">
+      {/* Header */}
+      <section className="page-header">
+        <p className="section-label">BharatAssist AI</p>
 
-      <input
-        type="text"
-        placeholder={t("searchSchemes")}
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
+        <h1>{t("governmentSchemes")}</h1>
 
-      <select value={category} onChange={(e) => setCategory(e.target.value)}>
-        <option value="all">{t("allCategories")}</option>
-        <option value="student">{t("students")}</option>
-        <option value="farmer">{t("farmers")}</option>
-        <option value="job_seeker">{t("jobSeekers")}</option>
-        <option value="senior_citizen">{t("seniorCitizens")}</option>
-        <option value="general">{t("general")}</option>
-      </select>
+        <p>{t("dashboardInfo")}</p>
+      </section>
 
+      {/* Search and Filter */}
+      <section className="scheme-controls">
+        <div className="search-wrapper">
+          <span className="search-icon">🔎</span>
+
+          <input
+            type="text"
+            placeholder={t("searchSchemes")}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+
+        <select value={category} onChange={(e) => setCategory(e.target.value)}>
+          <option value="all">{t("allCategories")}</option>
+
+          <option value="student">{t("students")}</option>
+
+          <option value="farmer">{t("farmers")}</option>
+
+          <option value="job_seeker">{t("jobSeekers")}</option>
+
+          <option value="senior_citizen">{t("seniorCitizens")}</option>
+
+          <option value="general">{t("general")}</option>
+        </select>
+      </section>
+
+      {/* Result count */}
+      <div className="scheme-results-header">
+        <p>
+          {filteredSchemes.length}{" "}
+          {filteredSchemes.length === 1 ? "scheme" : "schemes"}
+        </p>
+      </div>
+
+      {/* Schemes */}
       {filteredSchemes.length === 0 ? (
-        <p>{t("noSchemes")}</p>
+        <div className="status-card">
+          <p>{t("noSchemes")}</p>
+        </div>
       ) : (
-        filteredSchemes.map((scheme) => (
-          <div key={scheme._id}>
-            <h2>{scheme.name}</h2>
+        <div className="schemes-grid">
+          {filteredSchemes.map((scheme) => (
+            <div className="scheme-list-card" key={scheme._id}>
+              <div className="scheme-list-header">
+                <span className="category-badge">{scheme.category}</span>
 
-            <p>{scheme.description}</p>
+                <span className="state-badge">🇮🇳 {scheme.state}</span>
+              </div>
 
-            <p>
-              <strong>{t("category")}:</strong> {scheme.category}
-            </p>
+              <h2>{scheme.name}</h2>
 
-            <p>
-              <strong>{t("eligibility")}:</strong> {scheme.eligibility}
-            </p>
+              <p className="scheme-list-description">{scheme.description}</p>
 
-            <p>
-              <strong>{t("benefits")}:</strong> {scheme.benefits}
-            </p>
+              <div className="scheme-preview-info">
+                <div>
+                  <strong>{t("eligibility")}</strong>
 
-            <p>
-              <strong>{t("state")}:</strong> {scheme.state}
-            </p>
+                  <p>{scheme.eligibility}</p>
+                </div>
 
-            <Link to={`/schemes/${scheme._id}`}>{t("viewDetails")}</Link>
-          </div>
-        ))
+                <div>
+                  <strong>{t("benefits")}</strong>
+
+                  <p>{scheme.benefits}</p>
+                </div>
+              </div>
+
+              <Link
+                to={`/schemes/${scheme._id}`}
+                className="primary-button scheme-details-button"
+              >
+                {t("viewDetails")} →
+              </Link>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );

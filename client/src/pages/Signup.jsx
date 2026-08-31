@@ -10,6 +10,8 @@ function Signup() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("");
+
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -24,11 +26,17 @@ function Signup() {
         name,
         email,
         password,
+        role,
+        category: role,
       });
 
       navigate("/login");
     } catch (error) {
-      setMessage(error.response?.data?.message || "Signup failed");
+      setMessage(
+        error.response?.data?.message ||
+          error.response?.data?.error ||
+          "Signup failed",
+      );
     } finally {
       setLoading(false);
     }
@@ -75,6 +83,20 @@ function Signup() {
             placeholder="Create a password"
             required
           />
+
+          <label>What best describes you?</label>
+
+          <select
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+            required
+          >
+            <option value="">Select your category</option>
+            <option value="student">👨‍🎓 Student</option>
+            <option value="farmer">🌾 Farmer</option>
+            <option value="job_seeker">💼 Job Seeker</option>
+            <option value="senior_citizen">👴 Senior Citizen</option>
+          </select>
 
           {message && <p className="auth-error">{message}</p>}
 

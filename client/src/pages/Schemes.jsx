@@ -126,20 +126,6 @@ function Schemes() {
 
               <p className="scheme-list-description">{scheme.description}</p>
 
-              <div className="scheme-preview-info">
-                <div>
-                  <strong>{t("eligibility")}</strong>
-
-                  <p>{scheme.eligibility}</p>
-                </div>
-
-                <div>
-                  <strong>{t("benefits")}</strong>
-
-                  <p>{scheme.benefits}</p>
-                </div>
-              </div>
-
               <Link
                 to={`/schemes/${scheme._id}`}
                 className="primary-button scheme-details-button"

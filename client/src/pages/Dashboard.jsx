@@ -115,22 +115,13 @@ function Dashboard() {
                   <div className="scheme-card-top">
                     <span className="category-badge">{scheme.category}</span>
                   </div>
-
                   <h3>{scheme.name}</h3>
 
                   <p className="scheme-description">{scheme.description}</p>
 
                   <div className="scheme-info">
                     <p>
-                      <strong>{t("eligibility")}:</strong>
-                      <br />
-                      {scheme.eligibility}
-                    </p>
-
-                    <p>
-                      <strong>{t("benefits")}:</strong>
-                      <br />
-                      {scheme.benefits}
+                      <strong>{t("state")}:</strong> {scheme.state}
                     </p>
                   </div>
 

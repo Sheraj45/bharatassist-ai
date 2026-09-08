@@ -28,6 +28,7 @@ function Signup() {
         password,
         role,
         category: role,
+        
       });
 
       navigate("/login");

@@ -15,7 +15,6 @@ function SchemeDetails() {
     const getScheme = async () => {
       try {
         const response = await API.get(`/schemes/${id}`);
-
         setScheme(response.data.scheme);
       } catch (error) {
         setMessage(error.response?.data?.message || t("failedToLoadScheme"));
@@ -57,58 +56,68 @@ function SchemeDetails() {
     );
   }
 
+  const categoryLabels = {
+    student: "Student",
+    farmer: "Farmer",
+    job_seeker: "Job Seeker",
+    senior_citizen: "Senior Citizen",
+    general: "General",
+  };
+
+  const categoryLabel = categoryLabels[scheme.category] || scheme.category;
+
   return (
     <div className="page-container">
-      {/* Back */}
       <Link to="/schemes" className="back-link">
         ← {t("backToSchemes")}
       </Link>
 
-      {/* Main Details Card */}
       <div className="scheme-details-card">
-        {/* Header */}
+        {/* Scheme Header */}
         <div className="scheme-details-header">
-          <div>
-            <span className="category-badge">{scheme.category}</span>
+          <div className="scheme-details-title">
+            <div className="scheme-details-badges">
+              <span className="category-badge">{categoryLabel}</span>
+
+              <span className="scheme-state scheme-state-badge">
+                🇮🇳 {scheme.state}
+              </span>
+            </div>
 
             <h1>{scheme.name}</h1>
 
             <p className="scheme-details-description">{scheme.description}</p>
           </div>
-
-          <div className="scheme-state">🇮🇳 {scheme.state}</div>
         </div>
 
         <hr />
 
-        {/* Information */}
+        {/* Scheme Information */}
         <div className="scheme-details-grid">
           <div className="detail-box">
             <h3>📋 {t("eligibility")}</h3>
-
             <p>{scheme.eligibility}</p>
           </div>
 
           <div className="detail-box">
             <h3>💰 {t("benefits")}</h3>
-
             <p>{scheme.benefits}</p>
           </div>
 
           <div className="detail-box application-box">
             <h3>📝 {t("applicationProcess")}</h3>
-
             <p>{scheme.applicationProcess}</p>
           </div>
         </div>
 
-        {/* Apply Section */}
+        {/* Official Application */}
         <div className="apply-section">
           <div>
             <h2>{t("applyOfficial")}</h2>
 
             <p>
-              Visit the official government website to apply for this scheme.
+              This button will take you to the official government website where
+              you can learn more and apply.
             </p>
           </div>
 
@@ -116,7 +125,7 @@ function SchemeDetails() {
             href={scheme.officialWebsite}
             target="_blank"
             rel="noopener noreferrer"
-            className="primary-button"
+            className="primary-button official-apply-button"
           >
             {t("applyOfficial")} 🌐
           </a>

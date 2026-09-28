@@ -1,4 +1,4 @@
-require("dotenv").config();
+require("dotenv").config({ path: "./server/.env" });
 
 const connectDB = require("./config/db");
 const Scheme = require("./models/Scheme");
@@ -18,7 +18,7 @@ const schemes = [
     benefits:
       "Provides financial scholarship support for eligible college and university students. The amount and duration depend on the applicable scheme guidelines.",
     applicationProcess:
-      "Register/login through the National Scholarship Portal, complete One Time Registration if required, select the PM-USP scholarship, fill in the application and complete the required verification.",
+      "Register or log in through the National Scholarship Portal, complete One Time Registration if required, select the PM-USP scholarship, fill in the application and complete the required verification.",
     officialWebsite: "https://scholarships.gov.in/",
     state: "All India",
   },
@@ -46,7 +46,7 @@ const schemes = [
     eligibility:
       "Eligible Scheduled Tribe students pursuing higher education who satisfy the academic and other conditions specified by the scheme.",
     benefits:
-      "Provides financial support for eligible ST students pursuing higher education under the applicable scholarship/fellowship provisions.",
+      "Provides financial support for eligible ST students pursuing higher education under the applicable scholarship and fellowship provisions.",
     applicationProcess:
       "Applications are submitted through the National Scholarship Portal when the scheme is open, followed by institutional and government verification.",
     officialWebsite: "https://scholarships.gov.in/",
@@ -69,16 +69,16 @@ const schemes = [
   },
 
   {
-    name: "PM YASASVI",
+    name: "PM YASASVI Central Sector Scheme of Top Class Education for OBC, EBC and DNT Students",
     description:
-      "A Government of India initiative providing educational support for eligible students belonging to specified disadvantaged groups under the applicable PM YASASVI components.",
+      "A Central Government educational support initiative providing scholarships for eligible OBC, EBC and DNT students through applicable PM YASASVI components.",
     category: "student",
     eligibility:
-      "Eligibility depends on the specific PM YASASVI component, student category, class, family income and other conditions prescribed by the Government.",
+      "Eligibility depends on the applicable PM YASASVI component, student category, class or course, family income and other conditions prescribed by the Government.",
     benefits:
-      "Provides educational assistance to eligible students under the applicable PM YASASVI scheme component.",
+      "Provides educational financial assistance to eligible OBC, EBC and DNT students under the applicable PM YASASVI component.",
     applicationProcess:
-      "Check the currently available PM YASASVI scheme on the National Scholarship Portal or relevant government portal and submit the application during the notified period.",
+      "Check the currently available PM YASASVI component on the National Scholarship Portal and submit the application during the notified application period.",
     officialWebsite: "https://scholarships.gov.in/",
     state: "All India",
   },
@@ -97,7 +97,7 @@ const schemes = [
     benefits:
       "Provides income support of ₹6,000 per year in three equal installments, transferred directly to eligible beneficiaries' bank accounts.",
     applicationProcess:
-      "Farmers can register and access PM-KISAN services through the official PM-KISAN portal. State/UT authorities verify beneficiary eligibility.",
+      "Farmers can register and access PM-KISAN services through the official PM-KISAN portal. State and UT authorities verify beneficiary eligibility.",
     officialWebsite: "https://pmkisan.gov.in/",
     state: "All India",
   },
@@ -112,7 +112,7 @@ const schemes = [
     benefits:
       "Provides crop insurance protection against covered crop losses. The official portal also provides application, policy-status and crop-loss reporting facilities.",
     applicationProcess:
-      "Check the notified crop and season, apply through the official PMFBY system or authorized channels, pay the applicable farmer premium and retain the application/policy details.",
+      "Check the notified crop and season, apply through the official PMFBY system or authorized channels, pay the applicable farmer premium and retain the application or policy details.",
     officialWebsite: "https://pmfby.gov.in/",
     state: "All India",
   },
@@ -125,9 +125,9 @@ const schemes = [
     eligibility:
       "Eligible owner cultivators, tenant farmers, oral lessees, sharecroppers and eligible farmer groups such as SHGs or JLGs can apply subject to applicable bank and scheme conditions.",
     benefits:
-      "Provides access to agricultural credit for crop cultivation, post-harvest expenses, marketing, certain household needs, farm-asset maintenance and eligible agricultural/allied investments.",
+      "Provides access to agricultural credit for crop cultivation, post-harvest expenses, marketing, certain household needs, farm-asset maintenance and eligible agricultural and allied investments.",
     applicationProcess:
-      "Apply through a participating bank by submitting the required application, identity/address documents and applicable landholding/cropping information.",
+      "Apply through a participating bank by submitting the required application, identity and address documents and applicable landholding or cropping information.",
     officialWebsite: "https://www.myscheme.gov.in/schemes/kcc",
     state: "All India",
   },
@@ -142,7 +142,7 @@ const schemes = [
     benefits:
       "Provides information about soil nutrient status and recommendations intended to support balanced fertilizer use and improved soil management.",
     applicationProcess:
-      "Farmers can approach the designated agriculture department/soil testing facility in their area for soil sampling and Soil Health Card services.",
+      "Farmers can approach the designated agriculture department or soil testing facility in their area for soil sampling and Soil Health Card services.",
     officialWebsite: "https://soilhealth.dac.gov.in/",
     state: "All India",
   },
@@ -176,7 +176,7 @@ const schemes = [
     benefits:
       "Provides access to job searches, career centres, counsellors, internship opportunities, skill courses and other employment-related services.",
     applicationProcess:
-      "Visit the NCS website, register/login as a job seeker, complete your profile and use the job and career services available on the platform.",
+      "Visit the NCS website, register or log in as a job seeker, complete your profile and use the job and career services available on the platform.",
     officialWebsite: "https://www.ncs.gov.in/",
     state: "All India",
   },
@@ -189,9 +189,9 @@ const schemes = [
     eligibility:
       "Eligible youth and candidates can participate in skill-development opportunities offered under the applicable PMKVY 4.0 guidelines and training programmes.",
     benefits:
-      "Provides access to skill training, assessment/certification and opportunities intended to improve employability and support career development.",
+      "Provides access to skill training, assessment and certification opportunities intended to improve employability and support career development.",
     applicationProcess:
-      "Check available training opportunities through official Skill India/PMKVY channels, select an eligible course or training centre and complete registration as instructed.",
+      "Check available training opportunities through official Skill India and PMKVY channels, select an eligible course or training centre and complete registration as instructed.",
     officialWebsite: "https://www.msde.gov.in/",
     state: "All India",
   },
@@ -206,23 +206,23 @@ const schemes = [
     benefits:
       "Provides opportunities for practical workplace training and apprenticeship experience with participating establishments.",
     applicationProcess:
-      "Register on the official apprenticeship portal, create/update your candidate profile, search available apprenticeship opportunities and apply to suitable establishments.",
+      "Register on the official apprenticeship portal, create or update your candidate profile, search available apprenticeship opportunities and apply to suitable establishments.",
     officialWebsite: "https://www.apprenticeshipindia.gov.in/",
     state: "All India",
   },
 
   {
-    name: "Pradhan Mantri National Apprenticeship Mela",
+    name: "Deen Dayal Upadhyaya Grameen Kaushalya Yojana (DDU-GKY)",
     description:
-      "Government-supported apprenticeship recruitment events that connect candidates with establishments offering apprenticeship opportunities.",
+      "A rural skill-development programme focused on improving the employment opportunities and career prospects of rural youth from poor families.",
     category: "job_seeker",
     eligibility:
-      "Eligibility varies according to the apprenticeship opportunities and establishments participating in each apprenticeship mela.",
+      "The programme primarily targets rural youth between 15 and 35 years of age from poor families, subject to the applicable programme guidelines and state implementation requirements.",
     benefits:
-      "Provides candidates with opportunities to interact with employers and seek apprenticeship opportunities.",
+      "Provides skill training and supports pathways toward employment and improved income opportunities for eligible rural youth.",
     applicationProcess:
-      "Check apprenticeship mela announcements and participating opportunities through official apprenticeship and Skill India channels.",
-    officialWebsite: "https://www.apprenticeshipindia.gov.in/",
+      "Check DDU-GKY training opportunities through the official Kaushal Bharat or state rural livelihood mission channels and register through the prescribed process.",
+    officialWebsite: "https://www.kaushalbharat.gov.in/",
     state: "All India",
   },
 
@@ -248,14 +248,14 @@ const schemes = [
   {
     name: "Atal Vayo Abhyuday Yojana (AVYAY)",
     description:
-      "A Government of India scheme aimed at improving the quality of life of senior citizens and supporting dignified and active ageing.",
+      "A Government of India umbrella scheme aimed at improving the quality of life of senior citizens and supporting dignified, active and productive ageing.",
     category: "senior_citizen",
     eligibility:
-      "Senior-citizen support is provided through eligible components and implementing organizations under the applicable AVYAY guidelines.",
+      "Support is provided through eligible AVYAY components and implementing agencies according to the applicable government guidelines.",
     benefits:
-      "Supports services and facilities intended to provide senior citizens with basic amenities, care, shelter, food, medical support and opportunities for active ageing.",
+      "Supports senior-citizen welfare through areas such as shelter, food, healthcare, protection, active ageing, accessibility and other senior-care initiatives.",
     applicationProcess:
-      "Depending on the component, services are accessed through implementing organizations, government departments and designated channels under the AVYAY framework.",
+      "Depending on the component, services are accessed through implementing organizations, State or UT authorities and designated government channels under the AVYAY framework.",
     officialWebsite: "https://socialjustice.gov.in/schemes/43",
     state: "All India",
   },
@@ -263,60 +263,60 @@ const schemes = [
   {
     name: "Rashtriya Vayoshri Yojana (RVY)",
     description:
-      "A Government of India initiative associated with providing assisted-living devices to eligible senior citizens with disabilities or age-related impairments.",
+      "A Government of India initiative providing assisted-living devices to eligible senior citizens with age-related disabilities or infirmities.",
     category: "senior_citizen",
     eligibility:
-      "Eligibility depends on age, disability/impairment, socioeconomic and other conditions specified under the applicable RVY guidelines.",
+      "Eligible senior citizens must satisfy the age, disability or infirmity, socioeconomic and other conditions specified under the applicable RVY guidelines.",
     benefits:
-      "Eligible beneficiaries can receive appropriate assisted-living devices intended to improve mobility and quality of life.",
+      "Eligible beneficiaries can receive appropriate assisted-living devices intended to improve mobility, independence and quality of life.",
     applicationProcess:
-      "Eligible beneficiaries should check current implementation arrangements and camps or designated agencies through official government channels.",
+      "Check current implementation arrangements, beneficiary requirements and camps or designated agencies through official government channels.",
     officialWebsite: "https://socialjustice.gov.in/",
     state: "All India",
   },
 
   {
-    name: "Senior Citizen Welfare Scheme under AVYAY",
+    name: "Integrated Programme for Senior Citizens (IPSrC)",
     description:
-      "Government-supported welfare services for senior citizens delivered through eligible organizations and implementing agencies.",
+      "An AVYAY component supporting services and facilities for senior citizens, particularly indigent elderly persons, through eligible implementing organizations.",
     category: "senior_citizen",
     eligibility:
-      "Senior citizens who meet the requirements of the relevant welfare service or implementing programme may receive support.",
+      "Senior citizens may benefit from services provided through eligible implementing organizations under the applicable IPSrC guidelines.",
     benefits:
-      "May include access to shelter, food, healthcare, care services and other welfare support depending on the implementing programme.",
+      "May support senior citizen homes, shelter, food, medical care, care services and other approved welfare services.",
     applicationProcess:
-      "Contact the relevant implementing organization, state/UT social welfare authority or designated government channel for available senior-citizen services.",
-    officialWebsite: "https://socialjustice.gov.in/schemes",
-    state: "All India",
-  },
-
-  {
-    name: "SAGE - Seniorcare Ageing Growth Engine",
-    description:
-      "A Government-supported initiative intended to encourage products and services that improve the lives of senior citizens.",
-    category: "senior_citizen",
-    eligibility:
-      "The initiative primarily supports eligible organizations and enterprises developing products or services for senior citizens; availability for individual users depends on the service offered.",
-    benefits:
-      "Promotes access to innovative products and services aimed at improving the quality of life of senior citizens.",
-    applicationProcess:
-      "Senior citizens can explore relevant services through participating organizations and official senior-care resources.",
-    officialWebsite: "https://socialjustice.gov.in/",
-    state: "All India",
-  },
-
-  {
-    name: "Integrated Programme for Senior Citizens",
-    description:
-      "A government-supported programme focused on improving the quality of life of older persons through eligible organizations and services.",
-    category: "senior_citizen",
-    eligibility:
-      "Senior citizens may benefit from services provided through eligible implementing organizations under the applicable programme guidelines.",
-    benefits:
-      "May provide support such as shelter, food, healthcare and care services through approved organizations.",
-    applicationProcess:
-      "Contact an eligible implementing organization or relevant government/social-welfare authority to find available services in your area.",
+      "Contact an eligible implementing organization or the relevant State or UT social-welfare authority to find available services in your area.",
     officialWebsite: "https://socialjustice.gov.in/schemes/43",
+    state: "All India",
+  },
+
+  {
+    name: "Elderline - National Helpline for Senior Citizens",
+    description:
+      "A Government-supported national helpline providing information, guidance, emotional support and assistance to senior citizens.",
+    category: "senior_citizen",
+    eligibility:
+      "Senior citizens can use the Elderline service for information, guidance, support and assistance related to senior-citizen welfare and concerns.",
+    benefits:
+      "Provides access to information, guidance, emotional support and field intervention or linkage with relevant services in appropriate cases.",
+    applicationProcess:
+      "Call the toll-free Elderline number 14567 or use the available official senior-citizen support channels.",
+    officialWebsite: "https://socialjustice.gov.in/",
+    state: "All India",
+  },
+
+  {
+    name: "Seniorcare Ageing Growth Engine (SAGE)",
+    description:
+      "A Government initiative under the senior-citizen welfare framework that promotes products and services designed to improve the quality of life of older persons.",
+    category: "senior_citizen",
+    eligibility:
+      "SAGE primarily supports and facilitates organizations and enterprises developing products or services for senior citizens. Individual availability depends on the services offered.",
+    benefits:
+      "Promotes access to innovative products, solutions and services intended to improve the quality of life of senior citizens.",
+    applicationProcess:
+      "Senior citizens can explore relevant products and services through participating organizations and official senior-care resources.",
+    officialWebsite: "https://socialjustice.gov.in/",
     state: "All India",
   },
 
@@ -364,7 +364,7 @@ const schemes = [
     benefits:
       "Provides access to digital versions of eligible government-issued documents and certificates.",
     applicationProcess:
-      "Visit DigiLocker, register/login using the available identity verification method and access eligible documents.",
+      "Visit DigiLocker, register or log in using the available identity verification method and access eligible documents.",
     officialWebsite: "https://www.digilocker.gov.in/",
     state: "All India",
   },

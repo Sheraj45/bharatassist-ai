@@ -111,24 +111,40 @@ function SchemeDetails() {
         </div>
 
         {/* Official Application */}
+        {/* Official Application */}
         <div className="apply-section">
           <div>
             <h2>{t("applyOfficial")}</h2>
 
             <p>
-              This button will take you to the official government website where
-              you can learn more and apply.
+              Visit the official government website to learn more about this
+              scheme and its application process.
             </p>
           </div>
 
-          <a
-            href={scheme.officialWebsite}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="primary-button official-apply-button"
-          >
-            {t("applyOfficial")} 🌐
-          </a>
+          {scheme.officialWebsite &&
+            (() => {
+              try {
+                const url = new URL(scheme.officialWebsite);
+
+                if (url.protocol !== "https:" && url.protocol !== "http:") {
+                  return null;
+                }
+
+                return (
+                  <a
+                    href={url.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="primary-button official-apply-button"
+                  >
+                    {t("applyOfficial")} 🌐
+                  </a>
+                );
+              } catch {
+                return null;
+              }
+            })()}
         </div>
       </div>
     </div>

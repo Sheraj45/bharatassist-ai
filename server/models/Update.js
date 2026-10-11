@@ -19,6 +19,13 @@ const updateSchema = new mongoose.Schema(
       enum: ["student", "farmer", "job_seeker", "senior_citizen", "general"],
     },
 
+    language: {
+      type: String,
+      required: true,
+      enum: ["en", "hi", "te"],
+      default: "en",
+    },
+
     source: {
       type: String,
       required: true,
@@ -32,6 +39,34 @@ const updateSchema = new mongoose.Schema(
     publishedDate: {
       type: Date,
       default: Date.now,
+    },
+
+    originalUrl: {
+      type: String,
+      default: "",
+    },
+
+    imageUrl: {
+      type: String,
+      default: "",
+    },
+
+    sourceType: {
+      type: String,
+      enum: ["official", "news", "manual"],
+      default: "manual",
+    },
+
+    externalId: {
+      type: String,
+      default: "",
+      unique: true,
+      sparse: true,
+    },
+
+    isLive: {
+      type: Boolean,
+      default: false,
     },
   },
   {

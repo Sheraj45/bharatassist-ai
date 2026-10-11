@@ -106,6 +106,7 @@ function UpdateDetails() {
         </div>
 
         {/* Official Website */}
+        {/* Official Website */}
         <div className="apply-section">
           <div>
             <h2>{t("visitOfficialWebsite")}</h2>
@@ -113,14 +114,29 @@ function UpdateDetails() {
             <p>Visit the official website for complete information.</p>
           </div>
 
-          <a
-            href={update.officialWebsite}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="primary-button"
-          >
-            {t("visitOfficialWebsite")} 🌐
-          </a>
+          {update.officialWebsite &&
+            (() => {
+              try {
+                const url = new URL(update.officialWebsite);
+
+                if (!["https:", "http:"].includes(url.protocol)) {
+                  return null;
+                }
+
+                return (
+                  <a
+                    href={url.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="primary-button"
+                  >
+                    {t("visitOfficialWebsite")} 🌐
+                  </a>
+                );
+              } catch {
+                return null;
+              }
+            })()}
         </div>
       </article>
     </div>

@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import API from "../api/api";
 
 function Updates() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const [updates, setUpdates] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -12,10 +12,24 @@ function Updates() {
 
   useEffect(() => {
     const fetchUpdates = async () => {
+      setLoading(true);
+
       try {
         setMessage("");
 
-        const response = await API.get("/updates");
+        const currentLanguage = i18n.resolvedLanguage || i18n.language;
+
+        const languageMap = {
+          en: "en",
+          hi: "hi",
+          te: "te",
+        };
+
+        const language = languageMap[currentLanguage?.split("-")[0]] || "en";
+
+        const response = await API.get("/updates", {
+          params: { language },
+        });
 
         setUpdates(response.data.updates || []);
       } catch (error) {
@@ -28,7 +42,7 @@ function Updates() {
     };
 
     fetchUpdates();
-  }, [t]);
+  }, [i18n.resolvedLanguage, i18n.language, t]);
 
   if (loading) {
     return (
@@ -52,7 +66,7 @@ function Updates() {
 
   return (
     <div className="page-container">
-      {/* Header */}
+      {/* Page Header */}
       <section className="page-header">
         <p className="section-label">BharatAssist AI</p>
 
@@ -61,7 +75,7 @@ function Updates() {
         <p>{t("updatesDescription")}</p>
       </section>
 
-      {/* Updates */}
+      {/* Updates Grid */}
       {updates.length === 0 ? (
         <div className="status-card">
           <p>{t("noUpdates")}</p>
@@ -69,32 +83,48 @@ function Updates() {
       ) : (
         <div className="updates-grid">
           {updates.map((update) => (
-            <div className="update-card" key={update._id}>
-              {/* Card Header */}
+            <article className="update-card" key={update._id}>
+              {/* Category and Date */}
               <div className="update-card-header">
                 <span className="category-badge">{update.category}</span>
 
                 <span className="update-date">
-                  {new Date(update.publishedDate).toLocaleDateString()}
+                  {update.publishedDate &&
+                  !Number.isNaN(new Date(update.publishedDate).getTime())
+                    ? new Date(update.publishedDate).toLocaleDateString(
+                        i18n.resolvedLanguage || i18n.language || "en",
+                        {
+                          day: "numeric",
+                          month: "short",
+                          year: "numeric",
+                        },
+                      )
+                    : ""}
                 </span>
               </div>
 
-              {/* Title */}
-              <h2>{update.title}</h2>
+              {/* Short Title */}
+              <h2 className="update-card-title">{update.title}</h2>
 
-              {/* Description */}
-              <p className="update-description">{update.description}</p>
-
-              {/* Source */}
-              <p className="update-source">
-                <strong>{t("source")}:</strong> {update.source}
+              {/* Short Description */}
+              <p className="update-description">
+                {update.description
+                  ? update.description.length > 140
+                    ? `${update.description.slice(0, 140).trimEnd()}...`
+                    : update.description
+                  : ""}
               </p>
 
-              {/* Button */}
-              <Link to={`/updates/${update._id}`} className="primary-button">
-                {t("readMore")} →
-              </Link>
-            </div>
+              {/* Read More */}
+              <div className="update-card-footer">
+                <Link
+                  to={`/updates/${update._id}`}
+                  className="update-read-more"
+                >
+                  {t("readMore")} →
+                </Link>
+              </div>
+            </article>
           ))}
         </div>
       )}

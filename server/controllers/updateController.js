@@ -20,7 +20,6 @@ const createUpdate = async (req, res) => {
 const getUpdates = async (req, res) => {
   try {
     const User = require("../models/User");
-
     const user = await User.findById(req.user.id);
 
     if (!user) {
@@ -29,16 +28,30 @@ const getUpdates = async (req, res) => {
       });
     }
 
-    const updates = await Update.find({
-      category: {
-        $in: [user.category, "general"],
-      },
-    }).sort({
-      publishedDate: -1,
-    });
+    const language = ["en", "hi", "te"].includes(req.query.language)
+      ? req.query.language
+      : "en";
+
+    const categoryFilter = {
+      category: { $in: [user.category, "general"] },
+    };
+
+    let updates = await Update.find({
+      ...categoryFilter,
+      language,
+    }).sort({ publishedDate: -1 });
+
+    // If the selected language has no updates, show English updates.
+    if (updates.length === 0 && language !== "en") {
+      updates = await Update.find({
+        ...categoryFilter,
+        language: "en",
+      }).sort({ publishedDate: -1 });
+    }
 
     res.status(200).json({
       category: user.category,
+      language,
       updates,
     });
   } catch (error) {
